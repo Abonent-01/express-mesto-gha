@@ -11,14 +11,6 @@ const { PORT = 3000 } = process.env; // Слушаем 3000 порт
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
-app.use(router);
-app.use('/', (reg, res) => {
-  res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Error...'});
-});
-
-
-
 app.use((req, res, next) => {
   req.user = {
     _id: '64bb8d55f97f6d2d5b8a4f52' // вставьте сюда _id созданного в предыдущем пункте пользователя
@@ -27,7 +19,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+app.use(router);
+app.use('/', (reg, res) => {
+  res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Error...'});
+});
 
 app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
