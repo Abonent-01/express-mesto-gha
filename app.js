@@ -7,8 +7,9 @@ const ERROR_CODE_NOT_FOUND = 404;
 const ERROR_CODE_DEFAULT = 500;
 
 const auth = require('./middlewares/auth');
-const { validateCreateUser, validateLogin } = require('./middlewares/validate');
 const { createUser, login } = require('./middlewares/auth');
+const { validateCreateUser, validateLogin } = require('./middlewares/validate');
+
 
 const { PORT = 3000 } = process.env; // Слушаем 3000 порт
 
