@@ -8,7 +8,7 @@ const ERROR_CODE_DEFAULT = 500;
 
 const auth = require('./middlewares/auth');
 const { validateCreateUser, validateLogin } = require('./middlewares/validate');
-
+const { createUser, login } = require('./controllers/auth');
 
 const { PORT = 3000 } = process.env; // Слушаем 3000 порт
 
