@@ -75,7 +75,7 @@ module.exports.updateUserAvatar = (req, res) => {
     })
 }
 
-module.exports.logi = (req, res, next) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
     .select('+password')
