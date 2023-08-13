@@ -5,7 +5,7 @@ const {
   ERROR_CODE_WRONG_DATA,
   ERROR_CODE_NOT_FOUND,
   ERROR_CODE_DEFAULT,
-} = require('../error');
+} = require('../error/error');
 
 const ERROR_CODE_DUPLICATE = require('../error/duplicateError');
 const ERROR_CODE_AUTH = require('../error/authError');
