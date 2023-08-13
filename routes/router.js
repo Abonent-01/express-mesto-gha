@@ -8,9 +8,6 @@ const { validateCreateUser, validateLogin } = require('../middlewares/validate')
 const ERROR_CODE_NOT_FOUND = 404;
 
 
-
-router.use(auth);
-
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 

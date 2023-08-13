@@ -10,7 +10,8 @@ const { PORT = 3000 } = process.env; // Слушаем 3000 порт
 
 const app = express();
 app.use(express.json());
-
+app.post('/signin', validateLogin, login);
+app.post('/signup', validateCreateUser, createUser);
 
 
 /*
