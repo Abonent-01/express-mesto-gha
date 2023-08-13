@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const { validateUpdateProfile, validateUpdateAvatar, validateUserId } = require('../middlewares/validate');
-const { getUsers, getUser, updateUserProfile, updateUserAvatar } = require("../controllers/users");
+const { validateUserId, validateUpdateProfile, validateUpdateAvatar } = require('../middlewares/validate');
+const { getUsers, getUserInfo, getUser, updateUserProfile, updateUserAvatar } = require("../controllers/users");
 
 router.get('/', getUsers);
 router.get('/:userId', getUser);
+router.get('/me', getUserInfo);
 
 router.get('/:userId', validateUserId, getUser);
 router.patch('/me', validateUpdateProfile, updateUserProfile);
