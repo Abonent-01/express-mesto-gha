@@ -8,7 +8,7 @@ module.exports.validateUserId = celebrate({
   }),
 });
 
-module.exports.validateUpdateProfil = celebrate({
+module.exports.validateUpdateProfile = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     about: Joi.string().min(2).max(30).required(),
@@ -28,7 +28,7 @@ module.exports.validateCreateCard = celebrate({
   }),
 });
 
-module.exports.validateDeliteCardById = celebrate({
+module.exports.validateDeleteCardById = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
