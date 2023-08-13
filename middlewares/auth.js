@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const ERROR_CODE_AUTH = 401;
+const ERROR_CODE_AUTH = require('../error/authError');
 
 const auth = (req, res, next) => {
   let token;
