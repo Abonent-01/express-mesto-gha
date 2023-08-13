@@ -33,16 +33,19 @@ module.exports.getUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-  bcrypt.hash(password, 10)
+  bcrypt
+    .hash(password, 10)
     .then((hashedPassword) => User.create({ name, about, avatar, email, password: hashedPassword }))
     .then((user) => res.send(user.toJSON()))
     .catch((err) => {
+      // Handle database-related errors
       if (err.name === "ValidationError") {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+        return next(new ERROR_CODE_WRONG_DATA('Validation error'));
       } else if (err.code === 11000) {
-        next(new ERROR_CODE_DUPLICATE(`Error...`));
+        return next(new ERROR_CODE_DUPLICATE('Duplicate email'));
       }
-      next(err);
+      // Handle other errors
+      return next(err);
     });
 };
 
