@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
-
 const User = require('../models/user')
 
 const ERROR_CODE_WRONG_DATA = 400;
@@ -87,7 +86,7 @@ module.exports.logi = (req, res, next) => {
           if (isValidUser) {
             const jwt = jsonWebToken.sign({ _id: user._id }, 'SECRET');
             res.cookie('jwt', jwt, {
-              maxAge: 150,
+              maxAge: 36000000,
               httpOnly: true,
               sameSite: true,
             })
