@@ -7,8 +7,8 @@ const { validateCreateUser, validateLogin } = require('../middlewares/validate')
 
 const ERROR_CODE_NOT_FOUND = 404;
 
-app.post('/signin', validateLogin, login);
-app.post('/signup', validateCreateUser, createUser);
+router.post('/signin', validateLogin, login);
+router.post('/signup', validateCreateUser, createUser);
 
 router.use(auth);
 
