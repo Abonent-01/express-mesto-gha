@@ -3,9 +3,7 @@ const { validateUserId, validateUpdateProfile, validateUpdateAvatar } = require(
 const { getUsers, getUserInfo, getUser, updateUserProfile, updateUserAvatar } = require("../controllers/users");
 
 router.get('/', getUsers);
-router.get('/:userId', getUser);
 router.get('/me', getUserInfo);
-
 router.get('/:userId', validateUserId, getUser);
 router.patch('/me', validateUpdateProfile, updateUserProfile);
 router.patch('/me/avatar', validateUpdateAvatar, updateUserAvatar);
