@@ -10,35 +10,34 @@ const auth = require('./middlewares/auth');
 const { validateCreateUser, validateLogin } = require('./middlewares/validate');
 const { createUser, login } = require('./middlewares/auth');
 
-const { PORT = 3000 } = process.env; // Слушаем 3000 порт
+const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
+
+
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
+
+
+
+
 app.use(auth);
+
+
 app.use(router);
 
 
-/*
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64bb8d55f97f6d2d5b8a4f52' // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-
-  next();
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
-*/
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
-app.use(router);
+
 app.use('/', (req, res) => {
-  res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Error...'});
+  res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Error...' });
 });
-
-
 
 app.listen(PORT, () => {
-    // Если всё работает, консоль покажет, какой порт приложение слушает
-    console.log(`App listening on port ${PORT}`)
-})
+  console.log(`App listening on port ${PORT}`);
+});
