@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const router = require('./routes/router');
 
@@ -12,6 +13,7 @@ app.use(cookieParser());
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(router);
+app.use(errors());
 
 app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
