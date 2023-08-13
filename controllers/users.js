@@ -5,7 +5,7 @@ const User = require('../models/user')
 const ERROR_CODE_WRONG_DATA = 400;
 const ERROR_CODE_NOT_FOUND = 404;
 const ERROR_CODE_DEFAULT = 500;
-const ERROR_CODE_DUPLICATE = 11000;
+const ERROR_CODE_DUPLICATE = require('../error/duplicateError');
 const ERROR_CODE_AUTH = 401;
 
 module.exports.getUsers = (req, res, next) => {
@@ -35,7 +35,8 @@ module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hashedPassword) => User.create({ name, about, avatar, email, password: hashedPassword }))
+    .then((hashedPassword) => User.create({ name, about, avatar, email, password }))
+
     .then((user) => res.send(user.toJSON()))
     .catch((err) => {
       // Handle database-related errors
