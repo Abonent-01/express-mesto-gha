@@ -18,12 +18,13 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.status(201).send(card))  // Set status to 201 Created
     .catch((err) => {
       if (err.name === "ValidationError") {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+        res.status(400).send({ message: 'Validation Error' });  // Set status to 400 Bad Request
       } else {
         next(err);
       }
     });
 }
+
 
 
 module.exports.deleteCard = (req, res, next) => {
