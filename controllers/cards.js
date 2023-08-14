@@ -1,5 +1,4 @@
 const Card = require('../models/card');
-const cardSchema = require('../models/card');
 
 const ERROR_CODE_WRONG_DATA = require('../error/wrongDataError');
 const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
