@@ -12,18 +12,19 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.createCard = (req, res, next) => {
-  const { _id } = req.user;
   const { name, link } = req.body;
-  Card.create({ name, link, owner: _id })
-    .then((card) => res.status(201).send(card))  // Set status to 201 Created
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
+    .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+      if (err.name === 'ValidationError') {
+        next(new ERROR_CODE_WRONG_DATA('Некорректные данные при создании карточки'));
       } else {
         next(err);
       }
     });
-}
+};
+
 
 
 module.exports.deleteCard = (req, res, next) => {
