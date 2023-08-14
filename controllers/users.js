@@ -1,14 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
-const {
-  ERROR_CODE_WRONG_DATA,
-  ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_DEFAULT,
-} = require('../error/error');
 
 const ERROR_CODE_DUPLICATE = require('../error/duplicateError');
 const ERROR_CODE_AUTH = require('../error/authError');
+const ERROR_CODE_NOT_FOUND = require('../error/notFoundError')
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
