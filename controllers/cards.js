@@ -3,6 +3,7 @@ const Card = require('../models/card');
 const ERROR_CODE_WRONG_DATA = require('../error/wrongDataError');
 const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
 const ERROR_CODE_DEFAULT = require('../error/defaultError');
+const ERROR_CODE_FORBIDDEN = require('../error/forbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -24,53 +25,54 @@ module.exports.createCard = (req, res, next) => {
     });
 }
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(() => new Error("Not Found"))
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === "CastError") {
+    .orFail(() => new ERROR_CODE_NOT_FOUND("Not Found"))
+    .then((card) => {
+      if (card.owner.toString() === req.user._id) {
         res.status(ERROR_CODE_WRONG_DATA).send({ message: `Error...` });
-        return;
-      } else if (err.name = "Not Found") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: `Error...` });
-        return;
+        card.deleteOne(card)
+          .then((cards) => res.send(cards))
+          .catch(next)
       } else {
-        res.status(ERROR_CODE_DEFAULT).send({ message: `Error...`, err: err.message });
+        throw new ERROR_CODE_FORBIDDEN(`Error...`);
       }
     })
+    .catch(next);
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .orFail(() => new Error("Not Found"))
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(ERROR_CODE_WRONG_DATA).send({ message: `Error...` });
-        return;
-      } else if (err.name = "Not Found") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: `Error...` });
-        return;
+    .then((card) => {
+      if (!card) {
+        throw new ERROR_CODE_NOT_FOUND('Error...');
       } else {
-        res.status(ERROR_CODE_DEFAULT).sendsend({ message: `Error...`, err: err.message });
+        next(res.send(card));
+      }
+    })
+    .catch((err) =>{
+      if (err.name === "CastError") {
+        next(new ERROR_CODE_WRONG_DATA('Error...'))
+      } else {
+        next(err);
       }
     })
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .orFail(() => new Error("Not Found"))
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        throw new ERROR_CODE_NOT_FOUND(`Error...`)
+      } else {
+        next(res.send(card));
+      }
+    })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_WRONG_DATA).send({ message: `Error...` });
-        return;
-      } else if (err.name = "Not Found") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: `Error...` });
-        return;
+        next(new ERROR_CODE_WRONG_DATA(`Error...`));
       } else {
-        res.status(ERROR_CODE_DEFAULT).sendsend({ message: `Error...`, err: err.message });
+        next(err);
       }
     })
 };
