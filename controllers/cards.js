@@ -13,19 +13,29 @@ module.exports.getCards = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createCard = (req, res, next) => {
-  const { _id } = req.user;
-  const { name, link } = req.body;
-  Card.create({ name, link, owner: _id })
-    .then((card) => res.status(201).send(card))  // Set status to 201 Created
+module.exports.createCard = (request, response, next) => {
+  const {
+    name,
+    link,
+  } = request.body;
+  const owner = request.user._id;
+
+  cardSchema
+    .create({
+      name,
+      link,
+      owner,
+    })
+    .then((card) => response.status(201)
+      .send(card))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+      if (err.name === 'ValidationError') {
+        next(new ERROR_CODE_NOT_FOUND('Error...'));
       } else {
         next(err);
       }
     });
-}
+};
 
 
 module.exports.deleteCard = (req, res, next) => {
