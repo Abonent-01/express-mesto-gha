@@ -4,25 +4,22 @@ const ERROR_CODE_WRONG_DATA = require('../error/wrongDataError');
 const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
 const ERROR_CODE_DEFAULT = require('../error/defaultError');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(err => {
-      res.status(ERROR_CODE_DEFAULT).send({ message: `Error...`, err: err.message });
-    })
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
   const { name, link } = req.body;
   Card.create({ name, link, owner: _id })
-    .then((card) => res.status(201).send(card))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name = "ValidationError") {
-        res.status(ERROR_CODE_WRONG_DATA).send({ message: `Error...` });
-        return;
+        next(new ERROR_CODE_WRONG_DATA(`Error...`));
       } else {
-        res.status(ERROR_CODE_DEFAULT).send({ message: `Error...`, err: err.message });
+        next(err);
       }
     });
 }
