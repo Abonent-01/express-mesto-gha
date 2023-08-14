@@ -6,36 +6,24 @@ const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
 const ERROR_CODE_FORBIDDEN = require('../error/forbiddenError');
 
 module.exports.getCards = (req, res, next) => {
-  cardSchema
-    .find({})
-    .then((cards) => res.status(200)
-      .send(cards))
+  Card.find({})
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
-module.exports.createCard = (request, response, next) => {
-  const {
-    name,
-    link,
-  } = request.body;
-  const owner = request.user._id;
-
-  cardSchema
-    .create({
-      name,
-      link,
-      owner,
-    })
-    .then((card) => response.status(201)
-      .send(card))
+module.exports.createCard = (req, res, next) => {
+  const { _id } = req.user;
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: _id })
+    .then((card) => res.status(201).send(card))  // Set status to 201 Created
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ERROR_CODE_NOT_FOUND('Error...'));
+      if (err.name === "ValidationError") {
+        next(new ERROR_CODE_WRONG_DATA(`Error...`));
       } else {
         next(err);
       }
     });
-};
+}
 
 
 module.exports.deleteCard = (req, res, next) => {
