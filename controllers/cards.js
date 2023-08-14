@@ -14,15 +14,16 @@ module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
   const { name, link } = req.body;
   Card.create({ name, link, owner: _id })
-    .then((card) => res.send(card))
+    .then((card) => res.status(201).send(card))  // Set status to 201 Created
     .catch((err) => {
-      if (err.name = "ValidationError") {
+      if (err.name === "ValidationError") {
         next(new ERROR_CODE_WRONG_DATA(`Error...`));
       } else {
         next(err);
       }
     });
 }
+
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
