@@ -28,15 +28,14 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(() => new ERROR_CODE_NOT_FOUND("Not Found"))
+    .orFail(() => new ERROR_CODE_NOT_FOUND(`Error...`))
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
-        res.status(ERROR_CODE_WRONG_DATA).send({ message: `Error...` });
         card.deleteOne(card)
           .then((cards) => res.send(cards))
           .catch(next)
       } else {
-        throw new ERROR_CODE_FORBIDDEN(`Error...`);
+        throw new ERROR_CODE_FORBIDDEN('Error...')
       }
     })
     .catch(next);
