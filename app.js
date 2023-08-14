@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const router = require('./routes/router');
+const router = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env; // Слушаем 3000 порт
