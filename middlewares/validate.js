@@ -28,19 +28,19 @@ module.exports.validateCreateCard = celebrate({
   }),
 });
 
-module.exports.validateDeleteCardById = celebrate({
+module.exports.validateDeleteCard = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 });
 
-module.exports.validateDeleteCardLike = celebrate({
+module.exports.validateDislikeCard = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 });
 
-module.exports.validateCardLike = celebrate({
+module.exports.validateLikeCard = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   })
