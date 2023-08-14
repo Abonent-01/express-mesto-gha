@@ -15,16 +15,15 @@ module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
   const { name, link } = req.body;
   Card.create({ name, link, owner: _id })
-    .then((card) => res.status(201).send(card))  // Set status to 201 Created
+    .then((card) => res.status(200).send(card))  // Set status to 201 Created
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: 'Validation Error' });  // Set status to 400 Bad Request
+        next(new ERROR_CODE_WRONG_DATA(`Error...`));
       } else {
         next(err);
       }
     });
 }
-
 
 
 module.exports.deleteCard = (req, res, next) => {
@@ -36,7 +35,7 @@ module.exports.deleteCard = (req, res, next) => {
           .then((cards) => res.send(cards))
           .catch(next)
       } else {
-        throw new ERROR_CODE_FORBIDDEN('Error...')
+        throw new ERROR_CODE_FORBIDDEN('Чужую карточку удалить нельзя')
       }
     })
     .catch(next);
