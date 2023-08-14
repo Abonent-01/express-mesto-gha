@@ -1,8 +1,8 @@
 const Card = require('../models/card');
 
-const ERROR_CODE_WRONG_DATA = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_DEFAULT = 500;
+const ERROR_CODE_WRONG_DATA = require('../error/wrongDataError');
+const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
+const ERROR_CODE_DEFAULT = require('../error/defaultError');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
