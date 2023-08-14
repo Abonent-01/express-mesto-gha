@@ -1,12 +1,15 @@
 const Card = require('../models/card');
+const cardSchema = require('../models/card');
 
 const ERROR_CODE_WRONG_DATA = require('../error/wrongDataError');
 const ERROR_CODE_NOT_FOUND = require('../error/notFoundError');
 const ERROR_CODE_FORBIDDEN = require('../error/forbiddenError');
 
 module.exports.getCards = (req, res, next) => {
-  Card.find({})
-    .then((cards) => res.send(cards))
+  cardSchema
+    .find({})
+    .then((cards) => res.status(200)
+      .send(cards))
     .catch(next);
 };
 
