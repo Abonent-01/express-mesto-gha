@@ -62,9 +62,9 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        throw new ERROR_CODE_NOT_FOUND(`Error...`)
+        res.status(404).send({ message: 'Card not found' });
       } else {
-        next(res.send(card));
+        res.send(card);
       }
     })
     .catch((err) => {
@@ -73,5 +73,5 @@ module.exports.dislikeCard = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
