@@ -15,10 +15,10 @@ module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
   const { name, link } = req.body;
   Card.create({ name, link, owner: _id })
-    .then((card) => res.status(200).send(card))  // Set status to 201 Created
+    .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+      if (err.name = "ValidationError") {
+        next(new ERROR_CODE_WRONG_DATA(`ValidationError`));
       } else {
         next(err);
       }
