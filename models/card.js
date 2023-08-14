@@ -12,9 +12,9 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => validator.isURL(url),
+      validator: (v) => validator.isURL(v),
       message: 'Provide correct Link',
-    }
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +26,7 @@ const cardSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
       default: [],
-    }
+    },
   ],
   createdAt: {
     type: Date,
