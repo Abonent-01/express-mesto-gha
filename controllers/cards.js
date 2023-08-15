@@ -26,10 +26,10 @@ module.exports.createCard = (req, res, next) => {
 
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findOneAndDelete({ _id: req.params.cardId, owner: req.user._id })
+  Card.findByIdAndRemove({ _id: req.params.cardId, owner: req.user._id })
     .then((card) => {
       if (!card) {
-        throw new ERROR_CODE_FORBIDDEN('Error...');
+        throw new ERROR_CODE_NOT_FOUND('Error...'); // Card not found or not owned by user
       }
       res.send(card);
     })
@@ -41,6 +41,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
     });
 };
+
 
 
 module.exports.likeCard = (req, res, next) => {
