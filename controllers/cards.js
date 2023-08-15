@@ -29,7 +29,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findOneAndDelete({ _id: req.params.cardId, owner: req.user._id })
     .then((card) => {
       if (!card) {
-        throw new ERROR_CODE_NOT_FOUND('Error...');
+        throw new ERROR_CODE_FORBIDDEN('Error...');
       }
       res.send(card);
     })
