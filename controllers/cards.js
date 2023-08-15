@@ -24,29 +24,23 @@ module.exports.createCard = (req, res, next) => {
     });
 }
 
-
 module.exports.deleteCard = (req, res, next) => {
+  const removeCard = () => {
+    Card.findByIdAndRemove(req.params.cardId)
+      .then((card) => res.send(card))
+      .catch(next);
+  };
+
   Card.findById(req.params.cardId)
-    .orFail(() => new ERROR_CODE_NOT_FOUND(`Error...`))
     .then((card) => {
-      if (card.owner.toString() !== req.user._id) {
-        throw new ERROR_CODE_FORBIDDEN('Error...'); // User is not the owner of the card
+      if (!card) next(new ERROR_CODE_NOT_FOUND(`Error...`));
+      if (req.user._id === card.owner.toString()) {
+        return removeCard();
       }
-
-      return card.deleteOne(); // Delete the card
+      return next(new ERROR_CODE_FORBIDDEN('Error...'));
     })
-    .then(() => {
-      res.status(204).send(); // Send a successful response with no content
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
-
 
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
