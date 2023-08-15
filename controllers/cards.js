@@ -26,30 +26,19 @@ module.exports.createCard = (req, res, next) => {
 
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
+    .orFail(() => new ERROR_CODE_NOT_FOUND(`Error...`))
     .then((card) => {
-      if (!card) {
-        throw new ERROR_CODE_NOT_FOUND('Error...'); // Card not found
-      }
-      if (card.owner.toString() !== req.user._id) {
-        throw new ERROR_CODE_FORBIDDEN('Error...'); // User is not the owner of the card
-      }
-      return card.remove(); // Remove the card
-    })
-    .then((removedCard) => {
-      res.send(removedCard);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new ERROR_CODE_WRONG_DATA(`Error...`));
+      if (card.owner.toString() === req.user._id) {
+        card.deleteOne()
+          .then((cards) => res.send(cards))
+          .catch(next)
       } else {
-        next(err);
+        throw new ERROR_CODE_FORBIDDEN('Error...')
       }
-    });
+    })
+    .catch(next);
 };
-
-
-
 
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
