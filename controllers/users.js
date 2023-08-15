@@ -23,8 +23,11 @@ module.exports.getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === "CastError") {
         next(new ERROR_CODE_WRONG_DATA('Invalid user ID'));
-      }
+      } else if (err.message === 'NotFound') {
+        next (new ERROR_CODE_NOT_FOUND('Can`t find user'));
+      } else {
       next(err);
+      }
     });
 };
 
