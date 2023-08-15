@@ -26,12 +26,18 @@ module.exports.createCard = (req, res, next) => {
 
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove({ _id: req.params.cardId, owner: req.user._id })
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new ERROR_CODE_NOT_FOUND('Error...'); // Card not found or not owned by user
+        throw new ERROR_CODE_NOT_FOUND('Error...'); // Card not found
       }
-      res.send(card);
+      if (card.owner.toString() !== req.user._id) {
+        throw new ERROR_CODE_FORBIDDEN('Error...'); // User is not the owner of the card
+      }
+      return card.remove(); // Remove the card
+    })
+    .then((removedCard) => {
+      res.send(removedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -41,6 +47,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
     });
 };
+
 
 
 
