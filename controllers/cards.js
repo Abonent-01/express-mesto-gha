@@ -32,10 +32,11 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ERROR_CODE_FORBIDDEN('Error...'); // User is not the owner of the card
       }
-      return card.remove(); // Remove the card
+
+      return card.deleteOne(); // Delete the card
     })
-    .then((removedCard) => {
-      res.send(removedCard);
+    .then(() => {
+      res.status(204).send(); // Send a successful response with no content
     })
     .catch((err) => {
       if (err.name === 'CastError') {
